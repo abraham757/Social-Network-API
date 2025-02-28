@@ -1,4 +1,3 @@
-import User from './User.js';
-import Thought from './Thought.js';
-import Response from './Response.js';
-export { User, Thought, Response };
+import friends from './User.js';
+import thoughts from './User.js';
+export { thoughts, friends };

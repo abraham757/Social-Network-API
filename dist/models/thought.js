@@ -1,25 +1,48 @@
-import { Schema, model } from 'mongoose';
-// Esquema de las reacciones
+import { model, Schema, Types } from 'mongoose';
 const reactionSchema = new Schema({
-    reactionBody: { type: String, required: true, maxlength: 280 },
-    username: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-}, { _id: false } // No crear un _id automático para las reacciones
-);
-// Esquema del pensamiento (Thought)
-const thoughtSchema = new Schema({
-    thoughtText: { type: String, required: true, minlength: 1, maxlength: 280 },
-    username: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now },
-    reactions: [reactionSchema], // Array de reacciones
-}, {
-    toJSON: { virtuals: true }, // Permitir virtuals en la conversión a JSON
-    id: false, // No generar automáticamente el campo `id`
+    reactionId: {
+        type: Schema.Types.ObjectId,
+        default: () => new Types.ObjectId(),
+    },
+    reactionBody: {
+        type: String,
+        required: true,
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    }
 });
-// Virtual para contar las reacciones
-thoughtSchema.virtual("reactionCount").get(function () {
+const thoughtSchema = new Schema({
+    thoughtText: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 280
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    username: {
+        type: String,
+        required: true
+    },
+    reactions: [reactionSchema]
+}, {
+    toJSON: {
+        getters: true,
+        virtuals: true,
+    },
+    id: false
+});
+thoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 });
-// Modelo de Mongoose
-const Thought = model("Thought", thoughtSchema);
+const Thought = model('Thought', thoughtSchema);
+export { Thought };
 export default Thought;

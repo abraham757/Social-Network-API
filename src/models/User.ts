@@ -1,44 +1,74 @@
-import { Schema, Document, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-interface IUser extends Document {
-  first: string;
-  last: string;
-  age: number;  
-  fullName: string;
- }
+interface IUser {
+    [x: string]: any;
+    _id: any;
+    name: string;
+    uniqueId: string;
+    email: string;
+    password: string;
+    thoughts: Schema.Types.ObjectId[];
+    friends: Schema.Types.ObjectId[];
+}
 
-// Schema to create User model
+interface Email {
+    email: string;
+    uniqueId: string;
+    trim: boolean;
+    required: boolean;
+    unique: boolean;
+}
+
 const userSchema = new Schema<IUser>(
-  {
-    first: String,
-    last: String,
-    age: Number
-  },
-  {
-    // Mongoose supports two Schema options to transform Objects after querying MongoDb: toJSON and toObject.
-    // Here we are indicating that we want virtuals to be included with our response, overriding the default behavior
-    toJSON: {
-      virtuals: true,
+    {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        uniqueId: {
+            type: String,
+            required: true,
+            trim: true, 
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        thoughts: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Thought'
+        }],
+        friends: [{
+            type: Schema.Types.ObjectId,
+            ref: 'User'     
+        }]
     },
-    id: false,
-  }
+    {
+        timestamps: true,
+        toJSON: {
+            transform: (_doc, ret) => {
+                ret.id = ret._id;
+                delete ret._id;
+                delete ret.__v;
+                return ret;
+            },
+        },
+    }
 );
 
-// Create a virtual property `fullName` that gets and sets the user's full name
-userSchema
-  .virtual('fullName')
-  // Getter
-  .get(function (this: any) {
-    return `${this.first} ${this.last}`;
-  })
-  // Setter to set the first and last name
-  .set(function (this: any, v: any) {
-    const first = v.split(' ')[0];
-    const last = v.split(' ')[1];
-    this.set({ first, last });
-  });
+userSchema.virtual('friendCount').get(function() {
+    return this.friends.length;
+});
 
-// Initialize our User model
-const User = model('user', userSchema);
+const User = model<IUser>('User', userSchema);
 
-export default User
+
+export { Email, IUser, User };
+export default User;

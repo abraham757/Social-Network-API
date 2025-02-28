@@ -34,3 +34,17 @@ import { Request, Response } from 'express';
       res.status(500).json(err);
     }
   }
+
+    // create a new user
+    export const updateUser = async(req: Request, res: Response) => {
+      try {
+        const updatedUser = await User.findByIdAndUpdate(req.params.userId,req.body, {new: true});
+        res.json(updatedUser);
+      } catch (err) {
+        res.status(500).json(err);
+      }
+    }
+    export const deleteUser = async (req: Request, res: Response) => {
+      const deletedUser = await User.findByIdAndDelete(req.params.userId);
+      res.json(deletedUser);
+  };

@@ -33,3 +33,17 @@ export const createUser = async (req, res) => {
         res.status(500).json(err);
     }
 };
+// create a new user
+export const updateUser = async (req, res) => {
+    try {
+        const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true });
+        res.json(updatedUser);
+    }
+    catch (err) {
+        res.status(500).json(err);
+    }
+};
+export const deleteUser = async (req, res) => {
+    const deletedUser = await User.findByIdAndDelete(req.params.userId);
+    res.json(deletedUser);
+};

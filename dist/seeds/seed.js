@@ -3,17 +3,17 @@ import { User } from '../models/User.js';
 import Thought from '../models/Thought.js';
 const users = [
     {
-        name: 'John Doe',
-        uniqueId: 'john123', // Added required uniqueId field
-        email: 'john@example.com',
+        name: 'Abrahan Gonzalez',
+        uniqueId: 'agonzalez', // Added required uniqueId field
+        email: 'agonzalez@example.com',
         password: 'password',
         thoughts: [],
         friends: []
     },
     {
-        name: 'Jane Smith',
-        uniqueId: 'jane456', // Added required uniqueId field
-        email: 'jane@example.com',
+        name: 'Gonzalez Gonzalez',
+        uniqueId: 'gonzalez', // Added required uniqueId field
+        email: 'gonzalez@example.com',
         password: 'password',
         thoughts: [],
         friends: []
